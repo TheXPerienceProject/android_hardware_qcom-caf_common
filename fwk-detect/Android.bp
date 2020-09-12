@@ -28,10 +28,6 @@ cc_library_shared {
         "libutils",
         "liblog",
     ],
-    include_dirs: [
-        "libnativehelper/include/nativehelper",
-        ".",
-    ],
     header_libs: [
         "jni_headers",
     ],
