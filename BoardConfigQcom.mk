@@ -67,7 +67,13 @@ SOONG_CONFIG_qtidisplay += \
     llvmcov \
     composer_version \
     smmu_proxy \
-    ubwcp_headers
+    ubwcp_headers \
+    target_no_raw10_custom_format \
+    target_uses_unaligned_nv21_zsl \
+    target_uses_unaligned_ycrcb \
+    target_uses_ycrcb_camera_encode \
+    target_uses_ycrcb_camera_preview \
+    target_uses_ycrcb_venus_camera_preview
 
 # Set default values for qtidisplay config
 SOONG_CONFIG_qtidisplay_drmpp ?= false
@@ -94,6 +100,35 @@ SOONG_CONFIG_rfs += \
 
 # Set default values for rfs config
 SOONG_CONFIG_rfs_mpss_firmware_symlink_target ?= firmware_mnt
+SOONG_CONFIG_qtidisplay_target_no_raw10_custom_format ?= false
+SOONG_CONFIG_qtidisplay_target_uses_unaligned_nv21_zsl ?= false
+SOONG_CONFIG_qtidisplay_target_uses_unaligned_ycrcb ?= false
+SOONG_CONFIG_qtidisplay_target_uses_ycrcb_camera_encode ?= false
+SOONG_CONFIG_qtidisplay_target_uses_ycrcb_camera_preview ?= false
+SOONG_CONFIG_qtidisplay_target_uses_ycrcb_venus_camera_preview ?= false
+
+# For libgrallocutils features
+ifeq ($(TARGET_NO_RAW10_CUSTOM_FORMAT),true)
+    SOONG_CONFIG_qtidisplay_target_no_raw10_custom_format := true
+endif
+
+ifeq ($(TARGET_USES_UNALIGNED_NV21_ZSL),true)
+    SOONG_CONFIG_qtidisplay_target_uses_unaligned_nv21_zsl := true
+endif
+
+ifeq ($(TARGET_USES_UNALIGNED_YCRCB),true)
+    SOONG_CONFIG_qtidisplay_target_uses_unaligned_ycrcb := true
+endif
+
+ifeq ($(TARGET_USES_YCRCB_CAMERA_ENCODE),true)
+    SOONG_CONFIG_qtidisplay_target_uses_ycrcb_camera_encode := true
+endif
+
+ifeq ($(TARGET_USES_YCRCB_CAMERA_PREVIEW),true)
+    SOONG_CONFIG_qtidisplay_target_uses_ycrcb_camera_preview := true
+else ifeq ($(TARGET_USES_YCRCB_VENUS_CAMERA_PREVIEW),true)
+    SOONG_CONFIG_qtidisplay_target_uses_ycrcb_venus_camera_preview := true
+endif
 
 # Add rmnetctl to soong config namespaces
 SOONG_CONFIG_NAMESPACES += rmnetctl
