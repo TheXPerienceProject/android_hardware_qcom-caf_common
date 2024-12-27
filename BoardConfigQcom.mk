@@ -70,6 +70,7 @@ SOONG_CONFIG_qtidisplay += \
     composer_version \
     smmu_proxy \
     ubwcp_headers \
+    wide_color \
     target_no_raw10_custom_format \
     target_uses_unaligned_nv21_zsl \
     target_uses_unaligned_ycrcb \
@@ -104,6 +105,7 @@ SOONG_CONFIG_rfs += \
 
 # Set default values for rfs config
 SOONG_CONFIG_rfs_mpss_firmware_symlink_target ?= firmware_mnt
+SOONG_CONFIG_qtidisplay_wide_color ?= false
 SOONG_CONFIG_qtidisplay_target_no_raw10_custom_format ?= false
 SOONG_CONFIG_qtidisplay_target_uses_unaligned_nv21_zsl ?= false
 SOONG_CONFIG_qtidisplay_target_uses_unaligned_ycrcb ?= false
@@ -117,6 +119,10 @@ endif
 
 ifneq ($(TARGET_DISPLAY_SHIFT_VERTICAL),)
     SOONG_CONFIG_qtidisplay_shift_vertical := $(TARGET_DISPLAY_SHIFT_VERTICAL)
+endif
+
+ifeq ($(TARGET_HAS_WIDE_COLOR_DISPLAY), true)
+    SOONG_CONFIG_qtidisplay_wide_color := true
 endif
 
 ifeq ($(TARGET_USES_FOD_ZPOS),true)
