@@ -507,6 +507,30 @@ install_symlink {
     symlink_target: "/mnt/vendor/persist/rfs/shared",
 }
 
+mkdir {
+    name: "vendor_bt_firmware_mountpoint",
+    dir: "bt_firmware",
+    vendor: true,
+}
+
+mkdir {
+    name: "vendor_dsp_mountpoint",
+    dir: "dsp",
+    vendor: true,
+}
+
+mkdir {
+    name: "vendor_firmware_mnt_mountpoint",
+    dir: "firmware_mnt",
+    vendor: true,
+}
+
+mkdir {
+    name: "vendor_vm-system_mountpoint",
+    dir: "vm-system",
+    vendor: true,
+}
+
 prebuilt_hidl_interfaces {
     name: "hidl_dpm_api_interface",
     interfaces: [
