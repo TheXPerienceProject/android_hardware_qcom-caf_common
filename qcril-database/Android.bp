@@ -1,4 +1,10 @@
-sh_binary_host {
+//
+// SPDX-FileCopyrightText: The LineageOS Project
+// SPDX-License-Identifier: Apache-2.0
+//
+
+python_binary_host {
     name: "generate_qcril_db",
-    src: "generate_qcril_db.sh",
+    main: "generate_qcril_db.py",
+    srcs: ["generate_qcril_db.py"],
 }
