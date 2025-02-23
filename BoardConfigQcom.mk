@@ -71,6 +71,14 @@ SOONG_CONFIG_qtiaudio_feature_hal_v7 ?= false
 SOONG_CONFIG_qtiaudio_feature_instance_id ?= false
 SOONG_CONFIG_qtiaudio_feature_sound_trigger ?= false
 
+# SM8650 additions
+SOONG_CONFIG_qtiaudio_audio_feature_enabled_dynamic_log ?= false
+SOONG_CONFIG_qtiaudio_target_uses_qti_tinycompress ?= false
+SOONG_CONFIG_qtiaudio_audio_feature_enabled_gcov ?= false
+SOONG_CONFIG_qtiaudio_audio_feature_enabled_proxy_device ?= false
+SOONG_CONFIG_qtiaudio_audio_feature_disabled_dts_eagle ?= false
+SOONG_CONFIG_qtiaudio_audio_feature_enabled_hw_accelerated_effects ?= false
+
 ifeq ($(AUDIO_FEATURE_ENABLED_EXT_AMPLIFIER),true)
     SOONG_CONFIG_qtiaudio_feature_ext_amplifier := true
 endif
@@ -102,6 +110,28 @@ endif
 ifeq ($(BOARD_SUPPORTS_SOUND_TRIGGER_HAL),true)
     SOONG_CONFIG_qtiaudio_feature_sound_trigger := true
 endif
+
+# SM8650 additions
+ifeq ($(AUDIO_FEATURE_ENABLED_DYNAMIC_LOG),true)
+    SOONG_CONFIG_qtiaudio_audio_feature_enabled_dynamic_log := true
+endif
+
+ifeq ($(TARGET_USES_QTI_TINYCOMPRESS),true)
+    SOONG_CONFIG_qtiaudio_target_uses_qti_tinycompress := true
+endif
+
+ifeq ($(AUDIO_FEATURE_ENABLED_GCOV),true)
+    SOONG_CONFIG_qtiaudio_audio_feature_enabled_gcov := true
+endif
+
+ifeq ($(AUDIO_FEATURE_ENABLED_PROXY_DEVICE),true)
+    SOONG_CONFIG_qtiaudio_audio_feature_enabled_proxy_device := true
+endif
+
+ifeq ($(AUDIO_FEATURE_DISABLED_DTS_EAGLE),true)
+    SOONG_CONFIG_qtiaudio_audio_feature_disabled_dts_eagle := true
+endif
+
 
 # Add qtidisplay to soong config namespaces
 SOONG_CONFIG_NAMESPACES += qtidisplay
