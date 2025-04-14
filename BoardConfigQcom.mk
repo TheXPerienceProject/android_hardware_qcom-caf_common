@@ -254,16 +254,6 @@ ifeq ($(TARGET_NEEDS_RAW10_BUFFER_FIX),true)
     SOONG_CONFIG_qtidisplay_target_needs_raw10_buffer_fix := true
 endif
 
-# Add rmnetctl to soong config namespaces
-SOONG_CONFIG_NAMESPACES += rmnetctl
-
-# Add supported variables to rmnetctl config
-SOONG_CONFIG_rmnetctl += \
-    old_rmnet_data
-
-# Set default values for rmnetctl config
-SOONG_CONFIG_rmnetctl_old_rmnet_data ?= false
-
 # Tell HALs that we're compiling an AOSP build with an in-line kernel
 TARGET_COMPILE_WITH_MSM_KERNEL := true
 
@@ -331,8 +321,8 @@ endif
 MASTER_SIDE_CP_TARGET_LIST := msm8996 $(UM_4_4_FAMILY) $(UM_4_9_FAMILY) $(UM_4_14_FAMILY) $(UM_4_19_FAMILY)
 
 # Opt-in for old rmnet_data driver
-ifeq ($(filter $(UM_5_15_FAMILY),$(TARGET_BOARD_PLATFORM)),)
-    SOONG_CONFIG_rmnetctl_old_rmnet_data := true
+ifeq ($(filter $(UM_5_15_FAMILY) $(UM_6_1_FAMILY),$(TARGET_BOARD_PLATFORM)),)
+    $(call soong_config_set,rmnetctl,old_rmnet_data,true)
 endif
 
 # Use full QTI gralloc struct for GKI 2.0 targets
