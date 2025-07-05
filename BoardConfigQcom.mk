@@ -452,9 +452,9 @@ PRODUCT_SOONG_NAMESPACES +=  \
 endif
 
 # Add wlan to PRODUCT_SOONG_NAMESPACES
-ifneq ($(PRODUCT_BRAND),google)
-PRODUCT_SOONG_NAMESPACES += hardware/qcom-caf/wlan hardware/qcom-caf/wlan/qcwcn
-endif
+PRODUCT_SOONG_NAMESPACES += \
+    hardware/qcom-caf/wlan \
+    hardware/qcom-caf/wlan/qcwcn
 
 # Verified Boot
 BOARD_AVB_SYSTEM_ADD_HASHTREE_FOOTER_ARGS += --hash_algorithm sha256
