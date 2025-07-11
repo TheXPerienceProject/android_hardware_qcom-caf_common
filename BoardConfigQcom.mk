@@ -418,13 +418,23 @@ endif
 
 # Add dataservices to PRODUCT_SOONG_NAMESPACES if needed
 ifneq ($(USE_DEVICE_SPECIFIC_DATASERVICES),true)
-    ifneq ($(filter $(UM_6_1_FAMILY),$(TARGET_BOARD_PLATFORM)),)
-        PRODUCT_SOONG_NAMESPACES += vendor/qcom/opensource/dataservices-6.1
+    ifneq ($(filter $(UM_6_1_FAMILY) $(UM_5_10_FAMILY) $(UM_5_15_FAMILY),$(TARGET_BOARD_PLATFORM)),)
+        PRODUCT_SOONG_NAMESPACES += vendor/qcom/opensource/dataservices
         $(warning "dataservices 6.1")
     else
-        PRODUCT_SOONG_NAMESPACES += vendor/qcom/opensource/dataservices
+        PRODUCT_SOONG_NAMESPACES += vendor/qcom/opensource/dataservices-legacy
         $(warning "dataservices legacy")
     endif
+endif
+
+ifneq ($(filter $(LEGACY_UM_PLATFORMS),$(TARGET_BOARD_PLATFORM)),)
+$(warning "use lanai platform for thermal legacy on 5.4 <")
+PRODUCT_SOONG_NAMESPACES +=  \
+	vendor/qcom/opensource/thermal-hal-legacy
+else
+$(warning "use pakala platform for thermal legacy on =>5.10")
+PRODUCT_SOONG_NAMESPACES +=  \
+	vendor/qcom/opensource/thermal-hal
 endif
 
 # Add wlan to PRODUCT_SOONG_NAMESPACES
