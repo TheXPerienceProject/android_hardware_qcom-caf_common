@@ -441,12 +441,28 @@ ifneq ($(USE_DEVICE_SPECIFIC_DATASERVICES),true)
     endif
 endif
 
+# Add sound trigger HAL to PRODUCT_SOONG_NAMESPACES if needed
+ifeq ($(BOARD_SUPPORTS_OPENSOURCE_STHAL),true)
+    ifneq ($(filter $(LEGACY_UM_PLATFORMS),$(TARGET_BOARD_PLATFORM)),)
+        PRODUCT_SOONG_NAMESPACES += vendor/qcom/opensource/audio-hal/st-hal
+    else
+        ifneq ($(filter $(UM_5_10_FAMILY) $(UM_5_15_FAMILY) $(UM_6_1_FAMILY),$(TARGET_BOARD_PLATFORM)),)
+            PRODUCT_SOONG_NAMESPACES += vendor/qcom/opensource/audio-hal/st-hal-ar-legacy
+        else
+            PRODUCT_SOONG_NAMESPACES += vendor/qcom/opensource/audio-hal/st-hal-ar
+        endif
+        $(call soong_config_set,qtiaudio,headers_namespace,$(QCOM_SOONG_NAMESPACE))
+        $(call soong_config_set,qtiaudio,libarpal_namespace,$(QCOM_SOONG_NAMESPACE))
+    endif
+endif
+
+# Add thermal HAL to PRODUCT_SOONG_NAMESPACE
 ifneq ($(filter $(LEGACY_UM_PLATFORMS),$(TARGET_BOARD_PLATFORM)),)
 $(warning "use lanai platform for thermal legacy on 5.4 <")
 PRODUCT_SOONG_NAMESPACES +=  \
 	vendor/qcom/opensource/thermal-hal-legacy
 else
-$(warning "use pakala platform for thermal legacy on =>5.10")
+$(warning "use pakala platform for thermal on =>5.10")
 PRODUCT_SOONG_NAMESPACES +=  \
 	vendor/qcom/opensource/thermal-hal
 endif
