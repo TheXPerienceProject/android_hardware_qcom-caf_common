@@ -73,6 +73,18 @@ SOONG_CONFIG_qtiaudio_feature_hal_v7 ?= false
 SOONG_CONFIG_qtiaudio_feature_instance_id ?= false
 SOONG_CONFIG_qtiaudio_feature_sound_trigger ?= false
 
+ifeq ($(AUDIO_FEATURE_ENABLE_BT_A2DP_LPI),true)
+    $(call soong_config_set,qtiaudio,feature_bt_a2dp_lpi,true)
+endif
+
+ifeq ($(AUDIO_FEATURE_ENABLED_DEVICE_PREPARE_SEQ),true)
+    $(call soong_config_set,qtiaudio,feature_device_prepare_seq,true)
+endif
+
+ifeq ($(AUDIO_FEATURE_DISABLED_DTS_EAGLE),true)
+    $(call soong_config_set,qtiaudio,feature_disabled_dts_eagle,true)
+endif
+
 # SM8650 additions
 SOONG_CONFIG_qtiaudio_audio_feature_enabled_dynamic_log ?= false
 SOONG_CONFIG_qtiaudio_target_uses_qti_tinycompress ?= false
