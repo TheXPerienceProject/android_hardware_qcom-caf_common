@@ -54,24 +54,14 @@ endif
 # Add qtiaudio to soong config namespaces
 SOONG_CONFIG_NAMESPACES += qtiaudio
 
-# Add supported variables to qtiaudio config
-SOONG_CONFIG_qtiaudio += \
-    feature_ext_amplifier \
-    feature_extended_compress_format \
-    feature_gef_support \
-    feature_gki \
-    feature_hal_v7 \
-    feature_instance_id \
-    feature_sound_trigger
+# Configure audio HAL features
+ifeq ($(AUDIO_FEATURE_ENABLED_CIRRUS_CALIBRATION_RESISTANCE),true)
+    $(call soong_config_set,qtiaudio,cirrus_calibration_resistance,true)
+endif
 
-# Set default values for qtiaudio config
-SOONG_CONFIG_qtiaudio_feature_ext_amplifier ?= false
-SOONG_CONFIG_qtiaudio_feature_extended_compress_format ?= false
-SOONG_CONFIG_qtiaudio_feature_gef_support ?= false
-SOONG_CONFIG_qtiaudio_feature_gki ?= false
-SOONG_CONFIG_qtiaudio_feature_hal_v7 ?= false
-SOONG_CONFIG_qtiaudio_feature_instance_id ?= false
-SOONG_CONFIG_qtiaudio_feature_sound_trigger ?= false
+ifeq ($(AUDIO_FEATURE_ENABLED_AGM_HIDL),true)
+    $(call soong_config_set,qtiaudio,feature_agm_hidl,true)
+endif
 
 ifeq ($(AUDIO_FEATURE_ENABLE_BT_A2DP_LPI),true)
     $(call soong_config_set,qtiaudio,feature_bt_a2dp_lpi,true)
@@ -93,24 +83,32 @@ SOONG_CONFIG_qtiaudio_audio_feature_enabled_proxy_device ?= false
 SOONG_CONFIG_qtiaudio_audio_feature_disabled_dts_eagle ?= false
 SOONG_CONFIG_qtiaudio_audio_feature_enabled_hw_accelerated_effects ?= false
 
+ifeq ($(AUDIO_FEATURE_ENABLED_DYNAMIC_SR),true)
+    $(call soong_config_set,qtiaudio,feature_dynamic_sr,true)
+endif
+
+ifeq ($(AUDIO_FEATURE_ENABLED_EC_REF_CAPTURE),true)
+    $(call soong_config_set,qtiaudio,feature_ec_ref_capture,true)
+endif
+
 ifeq ($(AUDIO_FEATURE_ENABLED_EXT_AMPLIFIER),true)
-    SOONG_CONFIG_qtiaudio_feature_ext_amplifier := true
+    $(call soong_config_set,qtiaudio,feature_ext_amplifier,true)
 endif
 
 ifeq ($(AUDIO_FEATURE_ENABLED_EXTENDED_COMPRESS_FORMAT),true)
-    SOONG_CONFIG_qtiaudio_feature_extended_compress_format := true
+    $(call soong_config_set,qtiaudio,feature_extended_compress_format,true)
 endif
 
 ifeq ($(AUDIO_FEATURE_ENABLED_GEF_SUPPORT),true)
-    SOONG_CONFIG_qtiaudio_feature_gef_support := true
+    $(call soong_config_set,qtiaudio,feature_gef_support,true)
 endif
 
 ifeq ($(AUDIO_FEATURE_ENABLED_GKI),true)
-    SOONG_CONFIG_qtiaudio_feature_gki := true
+    $(call soong_config_set,qtiaudio,feature_gki,true)
 endif
 
 ifeq ($(AUDIO_FEATURE_ENABLED_HAL_V7), true)
-    SOONG_CONFIG_qtiaudio_feature_hal_v7 := true
+    $(call soong_config_set,qtiaudio,feature_hal_v7,true)
 endif
 
 ifeq ($(AUDIO_FEATURE_ENABLED_INSTANCE_ID),true)
@@ -142,16 +140,11 @@ ifeq ($(BOARD_SUPPORTS_QSTHW_API),true)
 endif
 
 ifeq ($(BOARD_SUPPORTS_SOUND_TRIGGER),true)
-    SOONG_CONFIG_qtiaudio_feature_sound_trigger := true
+    $(call soong_config_set,qtiaudio,feature_sound_trigger,true)
 endif
 
 ifeq ($(BOARD_SUPPORTS_SOUND_TRIGGER_HAL),true)
-    SOONG_CONFIG_qtiaudio_feature_sound_trigger := true
-endif
-
-# SM8650 additions
-ifeq ($(AUDIO_FEATURE_ENABLED_DYNAMIC_LOG),true)
-    SOONG_CONFIG_qtiaudio_audio_feature_enabled_dynamic_log := true
+    $(call soong_config_set,qtiaudio,feature_sound_trigger,true)
 endif
 
 ifeq ($(BOARD_SUPPORTS_SOUND_TRIGGER_CPU_AFFINITY_SET),true)
@@ -182,6 +175,13 @@ ifeq ($(AUDIO_FEATURE_DISABLED_DTS_EAGLE),true)
     SOONG_CONFIG_qtiaudio_audio_feature_disabled_dts_eagle := true
 endif
 
+ifneq ($(TARGET_PAL_SPKR_PROTECTION_PATH),)
+    $(call soong_config_set,qtiaudio,pal_spkr_protection_path,$(TARGET_PAL_SPKR_PROTECTION_PATH))
+endif
+
+ifeq ($(AUDIO_FEATURE_ENABLED_ULTRASOUND_PROXIMITY),true)
+    $(call soong_config_set,qtiaudio,ultrasound_proximity,true)
+endif
 
 # Add qtidisplay to soong config namespaces
 SOONG_CONFIG_NAMESPACES += qtidisplay
