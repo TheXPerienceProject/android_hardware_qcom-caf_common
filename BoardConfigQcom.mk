@@ -51,9 +51,6 @@ ifneq ($(filter $(LEGACY_UM_PLATFORMS),$(TARGET_BOARD_PLATFORM)),)
     $(call soong_config_set,qti_thermal,netlink,false)
 endif
 
-# Add qtiaudio to soong config namespaces
-SOONG_CONFIG_NAMESPACES += qtiaudio
-
 # Configure audio HAL features
 ifeq ($(AUDIO_FEATURE_ENABLED_CIRRUS_CALIBRATION_RESISTANCE),true)
     $(call soong_config_set,qtiaudio,cirrus_calibration_resistance,true)
@@ -74,14 +71,6 @@ endif
 ifeq ($(AUDIO_FEATURE_DISABLED_DTS_EAGLE),true)
     $(call soong_config_set,qtiaudio,feature_disabled_dts_eagle,true)
 endif
-
-# SM8650 additions
-SOONG_CONFIG_qtiaudio_audio_feature_enabled_dynamic_log ?= false
-SOONG_CONFIG_qtiaudio_target_uses_qti_tinycompress ?= false
-SOONG_CONFIG_qtiaudio_audio_feature_enabled_gcov ?= false
-SOONG_CONFIG_qtiaudio_audio_feature_enabled_proxy_device ?= false
-SOONG_CONFIG_qtiaudio_audio_feature_disabled_dts_eagle ?= false
-SOONG_CONFIG_qtiaudio_audio_feature_enabled_hw_accelerated_effects ?= false
 
 ifeq ($(AUDIO_FEATURE_ENABLED_DYNAMIC_SR),true)
     $(call soong_config_set,qtiaudio,feature_dynamic_sr,true)
@@ -159,22 +148,6 @@ ifeq ($(AUDIO_FEATURE_ENABLED_TRUE_STEREO),true)
     $(call soong_config_set,qtiaudio,feature_true_stereo,true)
 endif
 
-ifeq ($(TARGET_USES_QTI_TINYCOMPRESS),true)
-    SOONG_CONFIG_qtiaudio_target_uses_qti_tinycompress := true
-endif
-
-ifeq ($(AUDIO_FEATURE_ENABLED_GCOV),true)
-    SOONG_CONFIG_qtiaudio_audio_feature_enabled_gcov := true
-endif
-
-ifeq ($(AUDIO_FEATURE_ENABLED_PROXY_DEVICE),true)
-    SOONG_CONFIG_qtiaudio_audio_feature_enabled_proxy_device := true
-endif
-
-ifeq ($(AUDIO_FEATURE_DISABLED_DTS_EAGLE),true)
-    SOONG_CONFIG_qtiaudio_audio_feature_disabled_dts_eagle := true
-endif
-
 ifneq ($(TARGET_PAL_SPKR_PROTECTION_PATH),)
     $(call soong_config_set,qtiaudio,pal_spkr_protection_path,$(TARGET_PAL_SPKR_PROTECTION_PATH))
 endif
@@ -196,12 +169,13 @@ SOONG_CONFIG_qtidisplay += \
     displayconfig_enabled \
     udfps \
     default \
+    master_side_cp \
     shift_horizontal \
     shift_vertical \
+    smmu_proxy \
     var1 \
     var2 \
     var3 \
-    smmu_proxy \
     hwasan \
     llvmcov \
     mapper_ext \
@@ -214,8 +188,7 @@ SOONG_CONFIG_qtidisplay += \
     target_uses_unaligned_nv21_zsl \
     target_uses_unaligned_ycrcb \
     target_uses_ycrcb_camera_preview \
-    target_uses_ycrcb_venus_camera_preview \
-    target_needs_raw10_buffer_fix
+    target_uses_ycrcb_venus_camera_preview
 
 # Set default values for qtidisplay config
 SOONG_CONFIG_qtidisplay_composer_version ?= v3_3
@@ -226,27 +199,17 @@ SOONG_CONFIG_qtidisplay_gralloc4 ?= false
 SOONG_CONFIG_qtidisplay_displayconfig_enabled ?= false
 SOONG_CONFIG_qtidisplay_udfps ?= false
 SOONG_CONFIG_qtidisplay_default ?= true
+SOONG_CONFIG_qtidisplay_master_side_cp ?= false
 SOONG_CONFIG_qtidisplay_shift_horizontal ?= 0
 SOONG_CONFIG_qtidisplay_shift_vertical ?= 0
+SOONG_CONFIG_qtidisplay_smmu_proxy ?= false
 SOONG_CONFIG_qtidisplay_var1 ?= false
 SOONG_CONFIG_qtidisplay_var2 ?= false
 SOONG_CONFIG_qtidisplay_var3 ?= false
-SOONG_CONFIG_qtidisplay_smmu_proxy ?= false
 SOONG_CONFIG_qtidisplay_hwasan ?= false
 SOONG_CONFIG_qtidisplay_llvmcov ?= false
 SOONG_CONFIG_qtidisplay_mapper_ext ?= true
 SOONG_CONFIG_qtidisplay_ubwcp_headers ?= false
-SOONG_CONFIG_qtidisplay_composer_version ?= v2
-
-# Add rfs to soong config namespaces
-SOONG_CONFIG_NAMESPACES += rfs
-
-# Add supported variables to rfs config
-SOONG_CONFIG_rfs += \
-    mpss_firmware_symlink_target
-
-# Set default values for rfs config
-SOONG_CONFIG_rfs_mpss_firmware_symlink_target ?= firmware_mnt
 SOONG_CONFIG_qtidisplay_wide_color ?= false
 SOONG_CONFIG_qtidisplay_target_kernel_version ?= 0
 SOONG_CONFIG_qtidisplay_target_no_raw10_custom_format ?= false
@@ -256,7 +219,6 @@ SOONG_CONFIG_qtidisplay_target_uses_unaligned_nv21_zsl ?= false
 SOONG_CONFIG_qtidisplay_target_uses_unaligned_ycrcb ?= false
 SOONG_CONFIG_qtidisplay_target_uses_ycrcb_camera_preview ?= false
 SOONG_CONFIG_qtidisplay_target_uses_ycrcb_venus_camera_preview ?= false
-SOONG_CONFIG_qtidisplay_target_needs_raw10_buffer_fix ?= false
 
 ifneq ($(TARGET_DISPLAY_SHIFT_HORIZONTAL),)
     SOONG_CONFIG_qtidisplay_shift_horizontal := $(TARGET_DISPLAY_SHIFT_HORIZONTAL)
@@ -305,10 +267,6 @@ else ifeq ($(TARGET_USES_YCRCB_VENUS_CAMERA_PREVIEW),true)
     SOONG_CONFIG_qtidisplay_target_uses_ycrcb_venus_camera_preview := true
 endif
 
-ifeq ($(TARGET_NEEDS_RAW10_BUFFER_FIX),true)
-    SOONG_CONFIG_qtidisplay_target_needs_raw10_buffer_fix := true
-endif
-
 # Tell HALs that we're compiling an AOSP build with an in-line kernel
 TARGET_COMPILE_WITH_MSM_KERNEL := true
 
@@ -344,11 +302,6 @@ ifeq ($(filter $(UM_PLATFORMS),$(TARGET_BOARD_PLATFORM)),)
     SOONG_CONFIG_qtidisplay_displayconfig_enabled := true
 endif
 
-# Check if the target uses composer version 3 and is part of composer version on every UM platforms that support it
-ifeq ($(TARGET_USES_COMPOSER3)$(filter $(UM_PLATFORMS),$(TARGET_BOARD_PLATFORM)),true)
-    SOONG_CONFIG_qtidisplay_composer_version ?= v3
-endif
-
 # Enable SMMU proxy on UM platforms that support it
 ifneq ($(filter $(UM_6_1_FAMILY) $(UM_6_6_FAMILY),$(TARGET_BOARD_PLATFORM)),)
     SOONG_CONFIG_qtidisplay_smmu_proxy := true
@@ -372,8 +325,11 @@ ifneq ($(filter $(UM_4_9_FAMILY) $(UM_4_14_FAMILY) $(UM_4_19_FAMILY) $(UM_5_4_FA
     TARGET_ADDITIONAL_GRALLOC_10_USAGE_BITS += | (1 << 27)
 endif
 
-# List of targets that use master side content protection
+# Enable master side content protection on UM platforms that support it
 MASTER_SIDE_CP_TARGET_LIST := msm8996 $(UM_4_4_FAMILY) $(UM_4_9_FAMILY) $(UM_4_14_FAMILY) $(UM_4_19_FAMILY)
+ifneq ($(filter $(MASTER_SIDE_CP_TARGET_LIST),$(TARGET_BOARD_PLATFORM)),)
+    SOONG_CONFIG_qtidisplay_master_side_cp := true
+endif
 
 # Opt-in for old rmnet_data driver
 ifeq ($(filter $(UM_5_15_FAMILY) $(UM_6_1_FAMILY) $(UM_6_6_FAMILY),$(TARGET_BOARD_PLATFORM)),)
@@ -497,22 +453,24 @@ ifeq ($(BOARD_SUPPORTS_OPENSOURCE_STHAL),true)
         PRODUCT_SOONG_NAMESPACES += vendor/qcom/opensource/audio-hal/st-hal
     else
         ifneq ($(filter $(UM_5_10_FAMILY) $(UM_5_15_FAMILY) $(UM_6_1_FAMILY),$(TARGET_BOARD_PLATFORM)),)
-            PRODUCT_SOONG_NAMESPACES += vendor/qcom/opensource/audio-hal/st-hal-ar-legacy
+            PRODUCT_SOONG_NAMESPACES += vendor/qcom/opensource/audio-hal/st-hal-ar
+            $(call soong_config_set,qtiaudio,legacy_headers_namespace,$(QCOM_SOONG_NAMESPACE))
+            $(call soong_config_set,qtiaudio,legacy_libarpal_namespace,$(QCOM_SOONG_NAMESPACE))
         else
             PRODUCT_SOONG_NAMESPACES += vendor/qcom/opensource/audio-hal/st-hal-ar
+            $(call soong_config_set,qtiaudio,headers_namespace,$(QCOM_SOONG_NAMESPACE))
+            $(call soong_config_set,qtiaudio,libarpal_namespace,$(QCOM_SOONG_NAMESPACE))
         endif
-        $(call soong_config_set,qtiaudio,headers_namespace,$(QCOM_SOONG_NAMESPACE))
-        $(call soong_config_set,qtiaudio,libarpal_namespace,$(QCOM_SOONG_NAMESPACE))
     endif
 endif
 
-# Add thermal HAL to PRODUCT_SOONG_NAMESPACE
+# Add thermal HAL to PRODUCT_SOONG_NAMESPACES
 ifneq ($(filter $(LEGACY_UM_PLATFORMS),$(TARGET_BOARD_PLATFORM)),)
 $(warning "use lanai platform for thermal legacy on 5.4 <")
 PRODUCT_SOONG_NAMESPACES +=  \
 	vendor/qcom/opensource/thermal-hal-legacy
 else
-$(warning "use pakala platform for thermal on =>5.10")
+$(warning "use pakala platform for thermal on => 5.10")
 PRODUCT_SOONG_NAMESPACES +=  \
 	vendor/qcom/opensource/thermal-hal
 endif
