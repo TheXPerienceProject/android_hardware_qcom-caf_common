@@ -460,11 +460,11 @@ endif
 ifneq ($(filter $(LEGACY_UM_PLATFORMS),$(TARGET_BOARD_PLATFORM)),)
 $(warning "use lanai platform for thermal legacy on 5.4 <")
 PRODUCT_SOONG_NAMESPACES +=  \
-	vendor/qcom/opensource/thermal-hal-legacy
+	hardware/qcom-caf/thermal-legacy-um
 else
 $(warning "use pakala platform for thermal on => 5.10")
 PRODUCT_SOONG_NAMESPACES +=  \
-	vendor/qcom/opensource/thermal-hal
+	hardware/qcom-caf/thermal
 endif
 
 # Add wlan to PRODUCT_SOONG_NAMESPACES
