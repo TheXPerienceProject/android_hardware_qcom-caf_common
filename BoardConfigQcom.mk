@@ -412,7 +412,7 @@ ifeq ($(filter hardware/qcom-caf/bootctrl hardware/oplus/bootctrl hardware/xiaom
 endif
 
 # Add bootctrl to PRODUCT_SOONG_NAMESPACES
-ifeq ($(filter waffle dodge,$(TARGET_DEVICE)),)
+ifeq ($(filter waffle,$(TARGET_DEVICE)),)
 PRODUCT_SOONG_NAMESPACES += hardware/qcom-caf/bootctrl
 endif
 
