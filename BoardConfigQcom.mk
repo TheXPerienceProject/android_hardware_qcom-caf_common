@@ -400,9 +400,9 @@ QCOM_SOONG_NAMESPACE ?= hardware/qcom-caf/$(QCOM_HARDWARE_VARIANT)
 PRODUCT_SOONG_NAMESPACES += $(QCOM_SOONG_NAMESPACE)
 
 # Add bootctrl to PRODUCT_SOONG_NAMESPACES
-ifeq ($(filter waffle,$(TARGET_DEVICE)),)
+#ifeq ($(filter waffle,$(TARGET_DEVICE)),)
 PRODUCT_SOONG_NAMESPACES += hardware/qcom-caf/bootctrl
-endif
+#endif
 
 # Add a sanity check sometimes i forgot to define this when i change the source
 # For example on old impl of hw/oplus i have a enforced bootctrl but with
