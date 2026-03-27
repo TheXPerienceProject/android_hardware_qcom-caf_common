@@ -400,15 +400,15 @@ QCOM_SOONG_NAMESPACE ?= hardware/qcom-caf/$(QCOM_HARDWARE_VARIANT)
 PRODUCT_SOONG_NAMESPACES += $(QCOM_SOONG_NAMESPACE)
 
 # Add bootctrl to PRODUCT_SOONG_NAMESPACES
-#ifeq ($(filter waffle,$(TARGET_DEVICE)),)
+ifeq ($(filter waffle,$(TARGET_DEVICE)),)
 PRODUCT_SOONG_NAMESPACES += hardware/qcom-caf/bootctrl
-#endif
+endif
 
 # Add a sanity check sometimes i forgot to define this when i change the source
 # For example on old impl of hw/oplus i have a enforced bootctrl but with
 # new impl from los i didnt have
 ifeq ($(filter hardware/qcom-caf/bootctrl hardware/oplus/bootctrl hardware/xiaomi/bootctrl,$(PRODUCT_SOONG_NAMESPACES)),)
-    $(error $(newline) \
+    $(warning $(newline) \
 	    --------------------------------------------------------------------------- $(newline) \
             ERROR: You have not defined a bootctrl path in PRODUCT_SOONG_NAMESPACES.    $(newline) \
             Your XPerience build will not be able to manage A/B slots.                  $(newline) \
